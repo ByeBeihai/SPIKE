@@ -155,6 +155,7 @@ struct state_t
   csr_t_p stvec;
   virtualized_csr_t_p satp;
   csr_t_p scause;
+  //csr_t_p vxsat;
 
   csr_t_p mtval2;
   csr_t_p mtinst;

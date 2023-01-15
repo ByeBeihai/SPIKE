@@ -5886,7 +5886,7 @@ _ACEOF
 else
 
 cat >>confdefs.h <<_ACEOF
-#define DEFAULT_ISA "RV64IMAFDC"
+#define DEFAULT_ISA "RV64IMAFDCP"
 _ACEOF
 
 fi
@@ -5903,7 +5903,7 @@ _ACEOF
 else
 
 cat >>confdefs.h <<_ACEOF
-#define DEFAULT_PRIV "MSU"
+#define DEFAULT_PRIV "M"
 _ACEOF
 
 fi

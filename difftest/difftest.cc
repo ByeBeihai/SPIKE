@@ -42,6 +42,7 @@ struct diff_context_t {
   word_t dpc;
   word_t dscratch0;
   word_t dscratch1;
+  //word_t vxsat;
 };
 
 struct diff_gpr_pc_p {
@@ -99,6 +100,7 @@ void sim_t::diff_get_regs(void* diff_context) {
   ctx->dpc = state->dpc->read();
   ctx->dscratch0 = state->csrmap[CSR_DSCRATCH0]->read();
   ctx->dscratch1 = state->csrmap[CSR_DSCRATCH1]->read();
+  //ctx->vxsat = state->vxsat->read();
 }
 
 void sim_t::diff_set_regs(void* diff_context) {
@@ -133,6 +135,7 @@ void sim_t::diff_set_regs(void* diff_context) {
   state->dpc->write(ctx->dpc);
   state->csrmap[CSR_DSCRATCH0]->write(ctx->dscratch0);
   state->csrmap[CSR_DSCRATCH1]->write(ctx->dscratch1);
+  //state->vxsat->write(ctx->vxsat);
 }
 
 void sim_t::diff_memcpy(reg_t dest, void* src, size_t n) {
@@ -179,6 +182,8 @@ void sim_t::diff_display() {
       state->mideleg->read(), state->medeleg->read());
   printf("mtval: " FMT_WORD " stval: " FMT_WORD " mtvec: " FMT_WORD " stvec: " FMT_WORD "\n",
       state->mtval->read(), state->stval->read(), state->mtvec->read(), state->stvec->read());
+  //printf("vxsat: " FMT_WORD "\n",
+  //   state->vxsat->read());
   printf("privilege mode:%ld\n", state->prv);
   fflush(stdout);
 }
@@ -233,7 +238,7 @@ void difftest_init(int port) {
     // const char *default_bootargs,
     nullptr,
     // const char *default_isa,
-    "RV64IMAFDC_zba_zbb_zbc_zbs_zbkb_zbkc_zbkx_zknd_zkne_zknh_zksed_zksh_svinval",
+    "RV64IMAFDCP_zba_zbb_zbc_zbs_zbkb_zbkc_zbkx_zknd_zkne_zknh_zksed_zksh_svinval",
     // const char *default_priv
     DEFAULT_PRIV,
     // const char *default_varch,
