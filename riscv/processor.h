@@ -455,13 +455,15 @@ public:
       reg_t get_vlen() { return VLEN; }
       reg_t get_elen() { return ELEN; }
       reg_t get_slen() { return VLEN; }
-
+      reg_t get_vxsat() { return (vxsat->read()); }
+      void  set_vxsat(reg_t data) { (vxsat->write(data)); }
       VRM get_vround_mode() {
         return (VRM)(vxrm->read());
       }
   };
 
   vectorUnit_t VU;
+  vectorUnit_t* get_vu() { return &(VU); }
   triggers::module_t TM;
 };
 

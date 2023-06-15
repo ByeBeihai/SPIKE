@@ -37,12 +37,12 @@ struct diff_context_t {
   word_t mtvec;
   word_t stvec;
   word_t priv;
+  word_t vxsat;
   word_t debugMode;
   word_t dcsr;
   word_t dpc;
   word_t dscratch0;
   word_t dscratch1;
-  //word_t vxsat;
 };
 
 struct diff_gpr_pc_p {
@@ -100,7 +100,7 @@ void sim_t::diff_get_regs(void* diff_context) {
   ctx->dpc = state->dpc->read();
   ctx->dscratch0 = state->csrmap[CSR_DSCRATCH0]->read();
   ctx->dscratch1 = state->csrmap[CSR_DSCRATCH1]->read();
-  //ctx->vxsat = state->vxsat->read();
+  ctx->vxsat = p->get_vu()->get_vxsat();
 }
 
 void sim_t::diff_set_regs(void* diff_context) {
@@ -135,7 +135,7 @@ void sim_t::diff_set_regs(void* diff_context) {
   state->dpc->write(ctx->dpc);
   state->csrmap[CSR_DSCRATCH0]->write(ctx->dscratch0);
   state->csrmap[CSR_DSCRATCH1]->write(ctx->dscratch1);
-  //state->vxsat->write(ctx->vxsat);
+  p->get_vu()->set_vxsat(ctx->vxsat);
 }
 
 void sim_t::diff_memcpy(reg_t dest, void* src, size_t n) {
@@ -182,8 +182,8 @@ void sim_t::diff_display() {
       state->mideleg->read(), state->medeleg->read());
   printf("mtval: " FMT_WORD " stval: " FMT_WORD " mtvec: " FMT_WORD " stvec: " FMT_WORD "\n",
       state->mtval->read(), state->stval->read(), state->mtvec->read(), state->stvec->read());
-  //printf("vxsat: " FMT_WORD "\n",
-  //   state->vxsat->read());
+  printf("vxsat: " FMT_WORD "\n",
+     p->get_vu()->get_vxsat());
   printf("privilege mode:%ld\n", state->prv);
   fflush(stdout);
 }
