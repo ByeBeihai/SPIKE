@@ -81,6 +81,28 @@ struct : public arg_t {
 
 struct : public arg_t {
   std::string to_string(insn_t insn) const {
+    return std::to_string(insn.vectorls_ldst());
+  }
+} vectorls_ldst;
+
+struct : public arg_t {
+  std::string to_string(insn_t insn) const {
+    return std::to_string(insn.vectorls_mode());
+  }
+} vectorls_mode;
+struct : public arg_t {
+  std::string to_string(insn_t insn) const {
+    return std::to_string(insn.vectorls_xlen());
+  }
+} vectorls_xlen;
+struct : public arg_t {
+  std::string to_string(insn_t insn) const {
+    return std::to_string(insn.vectorls_elen());
+  }
+} vectorls_elen;
+
+struct : public arg_t {
+  std::string to_string(insn_t insn) const {
     switch (insn.csr())
     {
       #define DECLARE_CSR(name, num) case num: return #name;
@@ -465,6 +487,11 @@ static void NOINLINE add_itype_insn(disassembler_t* d, const char* name, uint32_
   d->add_insn(new disasm_insn_t(name, match, mask, {&xrd, &xrs1, &imm}));
 }
 
+static void NOINLINE add_vectorls_insn(disassembler_t* d, const char* name, uint32_t match, uint32_t mask)
+{
+  d->add_insn(new disasm_insn_t(name, match, mask, {&xrd, &xrs1,&xrs2, &vectorls_ldst,&vectorls_mode,&vectorls_xlen,&vectorls_elen}));
+}
+
 static void NOINLINE add_itype_shift_insn(disassembler_t* d, const char* name, uint32_t match, uint32_t mask)
 {
   d->add_insn(new disasm_insn_t(name, match, mask, {&xrd, &xrs1, &shamt}));
@@ -687,6 +714,7 @@ void disassembler_t::add_instructions(const isa_parser_t* isa)
   #define DEFINE_FX2TYPE(code) add_fx2type_insn(this, #code, match_##code, mask_##code);
   #define DEFINE_XFTYPE(code) add_xftype_insn(this, #code, match_##code, mask_##code);
   #define DEFINE_SFENCE_TYPE(code) add_sfence_insn(this, #code, match_##code, mask_##code);
+  #define DEFINE_VECTORLS_TYPE(code) add_vectorls_insn(this, #code, match_##code, mask_##code);
 
   add_insn(new disasm_insn_t("unimp", match_csrrw|(CSR_CYCLE<<20), 0xffffffff, {}));
   add_insn(new disasm_insn_t("c.unimp", 0, 0xffff, {}));
@@ -703,6 +731,8 @@ void disassembler_t::add_instructions(const isa_parser_t* isa)
   DEFINE_XSTORE(sh)
   DEFINE_XSTORE(sw)
   DEFINE_XSTORE(sd)
+
+  DEFINE_VECTORLS_TYPE(vectorls)
 
   if (isa->extension_enabled('A')) {
     DEFINE_XAMO(amoadd_w)

@@ -138,12 +138,19 @@ public:
   uint64_t p_imm4() { return x(20, 4); }
   uint64_t p_imm5() { return x(20, 5); }
   uint64_t p_imm6() { return x(20, 6); }
-
+  uint64_t vectorls_ldst() {return x(31,1);}
+  uint64_t vectorls_mode() {return x(30,1);}
+  uint64_t vectorls_xlen() {return x(27,2);}
+  uint64_t vectorls_elen() {return x(25,2);}
+  uint64_t vectorls_base()  {return x(15,5);}
+  uint64_t vectorls_offset()  {return x(20,5);}
+  uint64_t vectorls_rd()   {return x(7,5);}
 private:
   insn_bits_t b;
   uint64_t x(int lo, int len) { return (b >> lo) & ((insn_bits_t(1) << len) - 1); }
   uint64_t xs(int lo, int len) { return int64_t(b) << (64 - lo - len) >> (64 - len); }
   uint64_t imm_sign() { return xs(63, 1); }
+
 };
 
 template <class T, size_t N, bool zero_reg>
